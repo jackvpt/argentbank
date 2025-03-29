@@ -4,7 +4,8 @@ import { NavLink } from "react-router-dom"
 import logo from "../../assets/images/logo_argentbank.png"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";/**
- * Renders the main navigation header of the application.
+ 
+/** Renders the main navigation header of the application.
  *
  * @category Components
  * @component
@@ -22,7 +23,7 @@ const Header = () => {
           className={({ isActive }) =>
             isActive ? "navbar__link--active" : "navbar__link"
           }
-          to="/" // Links to Home page
+          to="/signin" // Links to Home page
         >
           <FontAwesomeIcon icon={faCircleUser} className="navbar__icon"/>
           Sign In

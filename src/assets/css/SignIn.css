@@ -1,0 +1,42 @@
+.container__signin {
+  display: flex;
+  flex-direction: column;
+  background-color: #12002b;
+  padding: 3rem;
+}
+.container__signin__content {
+  background-color: white;
+  width: 300px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.container__signin__content .input-remember {
+  display: flex;
+}
+.container__signin__content .input-remember label {
+  margin-left: 0.25rem;
+}
+.container__signin__content .input-wrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-bottom: 1rem;
+}
+.container__signin__content .input-wrapper label {
+  font-weight: bold;
+}
+.container__signin__content .input-wrapper input {
+  padding: 5px;
+  font-size: 1.2rem;
+}
+.container__signin__content .sign-in-button {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  border-color: #00bc77;
+  background-color: #00bc77;
+  color: #fff;
+}/*# sourceMappingURL=SignIn.css.map */

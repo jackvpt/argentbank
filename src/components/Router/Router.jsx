@@ -2,6 +2,8 @@ import React from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Header from "../Header/Header"
 import Home from "../../pages/Home/Home"
+import Footer from "../Footer/Footer"
+import SignIn from "../../pages/SignIn/SignIn"
 
 /**
  * Manages the routing of the application using React Router.
@@ -24,6 +26,7 @@ export default function Router() {
           <Routes>
             {/* Home page */}
             <Route path="/" element={<Home />} />
+            <Route path="/signin" element={<SignIn />} />
 
 
             {/* Catch-all route for 404 errors */}
@@ -31,6 +34,7 @@ export default function Router() {
           </Routes>
         </section>
       </main>
+      <Footer />
     </BrowserRouter>
   )
 }
