@@ -19,7 +19,7 @@ export default function Router() {
   return (
     <BrowserRouter>
     <Header />
-      <main className="container">
+      <main>
         <section className="section__main">
           <Routes>
             {/* Home page */}
