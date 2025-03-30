@@ -1,9 +1,9 @@
 import React from "react"
 import "./Header.scss"
-import { NavLink } from "react-router-dom"
+import { Link, NavLink } from "react-router-dom"
 import logo from "../../assets/images/logo_argentbank.png"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleUser } from "@fortawesome/free-solid-svg-icons";/**
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCircleUser } from "@fortawesome/free-solid-svg-icons" /**
  
 /** Renders the main navigation header of the application.
  *
@@ -15,20 +15,20 @@ const Header = () => {
   return (
     <header>
       {/* Logo of the application */}
-      <img src={logo} alt="Logo SportSee"></img>
-
+      <Link to="/">
+        <img src={logo} alt="Logo SportSee"></img>
+      </Link>
       {/* Navigation menu */}
       <nav className="navbar">
         <NavLink
           className={({ isActive }) =>
             isActive ? "navbar__link--active" : "navbar__link"
           }
-          to="/signin" // Links to Home page
+          to="/login" // Links to Home page
         >
-          <FontAwesomeIcon icon={faCircleUser} className="navbar__icon"/>
+          <FontAwesomeIcon icon={faCircleUser} className="navbar__icon" />
           Sign In
         </NavLink>
-
       </nav>
     </header>
   )

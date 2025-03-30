@@ -31,15 +31,21 @@ body {
 }
 
 #root {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 
 h1,
 h2,
 h3 {
   margin: 0;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 1.25rem 0;
 }
 
 .sr-only {
@@ -58,11 +64,4 @@ h3 {
 
 main {
   flex: 1;
-  height: 100%;
-}
-
-h1 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin: 1.25rem 0;
 }/*# sourceMappingURL=main.css.map */

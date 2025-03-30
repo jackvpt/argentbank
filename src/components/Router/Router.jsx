@@ -4,6 +4,7 @@ import Header from "../Header/Header"
 import Home from "../../pages/Home/Home"
 import Footer from "../Footer/Footer"
 import SignIn from "../../pages/SignIn/SignIn"
+import Profile from "../../pages/Profile/Profile"
 
 /**
  * Manages the routing of the application using React Router.
@@ -20,20 +21,16 @@ import SignIn from "../../pages/SignIn/SignIn"
 export default function Router() {
   return (
     <BrowserRouter>
-    <Header />
-      <main>
-        <section className="section__main">
-          <Routes>
-            {/* Home page */}
-            <Route path="/" element={<Home />} />
-            <Route path="/signin" element={<SignIn />} />
+      <Header />
+      <Routes>
+        {/* Home page */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<SignIn />} />
+        <Route path="/profile" element={<Profile />} />
 
-
-            {/* Catch-all route for 404 errors */}
-            {/* <Route path="*" element={<Error />} /> */}
-          </Routes>
-        </section>
-      </main>
+        {/* Catch-all route for 404 errors */}
+        {/* <Route path="*" element={<Error />} /> */}
+      </Routes>
       <Footer />
     </BrowserRouter>
   )

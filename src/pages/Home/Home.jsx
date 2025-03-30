@@ -5,7 +5,7 @@ import FeatureItem from "../../components/FeatureItem/FeatureItem"
 
 const Home = () => {
   return (
-    <>
+    <main>
       <Hero />
       <section className="container__features">
         <h2 class="sr-only">Features</h2>
@@ -19,7 +19,7 @@ const Home = () => {
           />
         ))}
       </section>
-    </>
+    </main>
   )
 }
 
