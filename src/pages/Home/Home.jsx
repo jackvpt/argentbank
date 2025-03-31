@@ -8,7 +8,7 @@ const Home = () => {
     <main>
       <Hero />
       <section className="container__features">
-        <h2 class="sr-only">Features</h2>
+        <h2 className="sr-only">Features</h2>
         {featuresData.map((feature, index) => (
           <FeatureItem
             key={index}
