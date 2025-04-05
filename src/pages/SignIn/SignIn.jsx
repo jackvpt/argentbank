@@ -1,13 +1,13 @@
-import "./SignIn.scss";
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { login } from "../../api/auth";
-import { useDispatch } from "react-redux";
-import { loginSuccess } from "../../store/authSlice";
-import { useNavigate } from "react-router-dom";
+import "./SignIn.scss"
+import { useState } from "react"
+import { useMutation } from "@tanstack/react-query"
+import { login } from "../../api/auth"
+import { useDispatch } from "react-redux"
+import { loginSuccess } from "../../store/authSlice"
+import { useNavigate } from "react-router-dom"
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCircleUser } from "@fortawesome/free-solid-svg-icons"
 
 /**
  * SignIn component allows users to log in by providing their credentials.
@@ -16,11 +16,11 @@ import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
  * @returns {JSX.Element} The sign-in form with input fields for email and password.
  */
 const SignIn = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [rememberMe, setRememberMe] = useState(false)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   /**
    * Handles the login request using React Query's `useMutation`.
@@ -30,22 +30,22 @@ const SignIn = () => {
   const mutation = useMutation({
     mutationFn: () => login(email, password),
     onSuccess: (data) => {
-      dispatch(loginSuccess(data));
+      dispatch(loginSuccess(data))
 
-      localStorage.removeItem("token");
-      sessionStorage.removeItem("token");
+      localStorage.removeItem("token")
+      sessionStorage.removeItem("token")
       if (rememberMe) {
-        localStorage.setItem("token", data.body.token);
+        localStorage.setItem("token", data.body.token)
       } else {
-        sessionStorage.setItem("token", data.body.token);
+        sessionStorage.setItem("token", data.body.token)
       }
 
-      navigate("/profile");
+      navigate("/profile")
     },
     onError: (error) => {
-      console.error("Connection error: ", error);
+      console.error("Connection error: ", error)
     },
-  });
+  })
 
   /**
    * Handles form submission, preventing default behavior and triggering the login mutation.
@@ -53,9 +53,9 @@ const SignIn = () => {
    * @param {React.FormEvent<HTMLFormElement>} e - The form submission event.
    */
   const handleSubmit = (e) => {
-    e.preventDefault();
-    mutation.mutate();
-  };
+    e.preventDefault()
+    mutation.mutate()
+  }
 
   return (
     <main className="container__signin">
@@ -84,30 +84,26 @@ const SignIn = () => {
             />
           </div>
           <div className="input-remember">
-            <input 
-              type="checkbox" 
-              id="remember-me" 
-              checked={rememberMe} 
-              onChange={(e) => setRememberMe(e.target.checked)} 
+            <input
+              type="checkbox"
+              id="remember-me"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
             />
             <label htmlFor="remember-me">Remember me</label>
           </div>
-          <button className="sign-in-button" type="submit" disabled={mutation.isLoading}>
+          <button
+            className="sign-in-button"
+            type="submit"
+            disabled={mutation.isLoading}
+          >
             {mutation.isLoading ? "Connecting..." : "Sign In"}
           </button>
         </form>
         {mutation.isError && <p>Connection error</p>}
       </div>
     </main>
-  );
-};
+  )
+}
 
-export default SignIn;
-
-
-
-
-
-
-
-
+export default SignIn

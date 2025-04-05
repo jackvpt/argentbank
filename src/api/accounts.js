@@ -1,5 +1,3 @@
-import AccountsModel from "../models/AccountsModel"
-
 export const fetchAccountsByUserId = async (userId) => {
   try {
     const response = await fetch("/__mocks__/accounts.json")

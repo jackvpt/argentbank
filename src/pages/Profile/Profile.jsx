@@ -1,48 +1,41 @@
 import "./Profile.scss"
 import { useQuery } from "@tanstack/react-query"
-import { fetchUserProfile } from "../../api/auth"
+import { fetchUserProfile } from "../../api/user"
 import Account from "../../components/Account/Account"
 import { fetchAccountsByUserId } from "../../api/accounts"
+import { useDispatch } from "react-redux"
+import { setUser } from "../../store/authSlice"
 
 const Profile = () => {
-  // 1. Always call the first useQuery
+  const dispatch = useDispatch()
+
   const {
-    data: userProfile,
-    isLoading: isUserLoading,
-    isError: isUserError,
-    error: userError,
+    data: user,
+    isLoading,
+    isError,
   } = useQuery({
     queryKey: ["userProfile"],
     queryFn: fetchUserProfile,
-    retry: false,
   })
 
-  // 2. Always call the second useQuery — execution is deferred until userProfile is ready
-  const {
-    data:accounts,
-    isLoading: isAccountsLoading,
-    isError: isAccountsError,
-    error: accountsError,
-  } = useQuery({
-    queryKey: ["accounts", userProfile?.id],
-    queryFn: () => fetchAccountsByUserId(userProfile.id),
-    enabled: !!userProfile?.id, // only runs when userProfile.id exists
+  const { data: accounts, isLoading: isLoadingAccounts } = useQuery({
+    queryKey: ["accounts", user?.id],
+    queryFn: () => fetchAccountsByUserId(user.id),
+    enabled: !!user,
   })
 
-  // Loading/Error states
-  if (isUserLoading) return <p>Loading user profile...</p>
-  if (isUserError) return <p>Error: {userError.message}</p>
-  if (isAccountsLoading) return <p>Loading accounts...</p>
-  if (isAccountsError) return <p>Error: {accountsError.message}</p>
+  if (isLoading || isLoadingAccounts) return <p>Loading profile...</p>
+  if (isError) return <p>Unable to fetch user profile</p>
 
-console.log('userProfile.id :>> ', userProfile.id);
+  dispatch(setUser(user))
+
   return (
     <main className="container__profile">
       <div className="container__profile__header">
         <h1>
           Welcome back
           <br />
-          {userProfile.firstName} {userProfile.lastName}
+          {user.firstName} {user.lastName}
         </h1>
         <button className="edit-button">Edit Name</button>
       </div>
