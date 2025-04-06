@@ -1,21 +1,76 @@
 .container__profile {
   background-color: #12002b;
 
-  &__header{
-        color: #fff;
-        margin-bottom: 2rem;
+  &__header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 
-        h1{
-            font-size:2rem;
+    color: #fff;
+    margin-bottom: 2rem;
+    padding: 20px;
+
+    h1,
+    .user-name {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .edit-button {
+      border-color: #00bc77;
+      background-color: #00bc77;
+      color: #fff;
+      font-weight: bold;
+      margin-top: 1.5rem;
+      padding: 10px;
+      cursor: pointer;
+
+      &:hover{
+        background-color: #fff;
+        color: #00bc77;
+      }
+    }
+
+    .edit-form {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top:20px;
+
+      &__inputs {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+
+        input {
+          padding: 10px;
         }
+      }
 
-        .edit-button {
-            border-color: #00bc77;
+      &__controls {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+
+        &__button {
+          width: 120px;
+          border-color: #00bc77;
+          background-color: white;
+          color: #00bc77;
+          padding: 5px 0;
+          cursor: pointer;
+
+          &:hover{
             background-color: #00bc77;
-            color: #fff;
-            font-weight: bold;
-            padding: 10px;
+            color: white;
           }
-      
+        }
+      }
+    }
   }
 }
