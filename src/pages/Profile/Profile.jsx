@@ -8,7 +8,7 @@ import { setUser } from "../../store/authSlice"
 import { useState } from "react"
 
 const Profile = () => {
-  const [editMode, setEditMode] = useState(true)
+  const [editMode, setEditMode] = useState(false)
   const [newUserFirstName, setNewUserFirstName] = useState("")
   const [newUserLastName, setNewUserLastName] = useState("")
   const dispatch = useDispatch()
