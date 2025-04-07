@@ -2,8 +2,6 @@ import "./SignIn.scss"
 import { useState } from "react"
 import { useMutation } from "@tanstack/react-query"
 import { login } from "../../api/auth"
-import { useDispatch } from "react-redux"
-import { loginSuccess } from "../../store/authSlice"
 import { useNavigate } from "react-router-dom"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -19,7 +17,6 @@ const SignIn = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [rememberMe, setRememberMe] = useState(false)
-  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   /**
@@ -30,7 +27,7 @@ const SignIn = () => {
   const mutation = useMutation({
     mutationFn: () => login(email, password),
     onSuccess: (data) => {
-      dispatch(loginSuccess(data))
+      // dispatch(loginSuccess(data))
 
       localStorage.removeItem("token")
       sessionStorage.removeItem("token")
