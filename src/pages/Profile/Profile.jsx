@@ -1,18 +1,15 @@
 import "./Profile.scss"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { fetchUserProfile, updateUserName } from "../../api/user"
 import Account from "../../components/Account/Account"
 import { fetchAccountsByUserId } from "../../api/accounts"
-import { useDispatch, useSelector } from "react-redux"
-import { setUser } from "../../store/authSlice"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 const Profile = () => {
   const [editMode, setEditMode] = useState(false)
   const [newUserFirstName, setNewUserFirstName] = useState("")
   const [newUserLastName, setNewUserLastName] = useState("")
-  const dispatch = useDispatch()
-  const profile = useSelector((state) => state.auth)
+  const queryClient = useQueryClient()
 
   const {
     data: user,
@@ -29,17 +26,10 @@ const Profile = () => {
     enabled: !!user,
   })
 
-  useEffect(() => {
-    if (user) {
-      dispatch(setUser(user))
-    }
-  }, [user, dispatch])
-
   const mutation = useMutation({
     mutationFn: updateUserName,
-    onSuccess: (updatedUser) => {
-      console.log("updatedUser :>> ", updatedUser)
-      dispatch(setUser(updatedUser.body))
+    onSuccess: () => {
+      queryClient.invalidateQueries(["userProfile"])
     },
     onError: (error) => {
       console.error("Error updating user name: ", error)
@@ -52,9 +42,6 @@ const Profile = () => {
     setEditMode(false)
   }
 
-  if (isLoading || isLoadingAccounts) return <p>Loading profile...</p>
-  if (isError) return <p>Unable to fetch user profile</p>
-
   const handleSaveNewUser = () => {
     const updatedUser = {
       firstName: newUserFirstName || user.firstName,
@@ -66,6 +53,9 @@ const Profile = () => {
     setEditMode(false)
   }
 
+  if (isLoading || isLoadingAccounts) return <p>Loading profile...</p>
+  if (isError) return <p>Unable to fetch user profile</p>
+
   return (
     <main className="container__profile">
       <section className="container__profile__header">
@@ -74,7 +64,7 @@ const Profile = () => {
         {!editMode ? (
           <>
             <p className="user-name">
-              {profile.firstName} {profile.lastName}
+              {user.firstName} {user.lastName}
             </p>
             <button className="edit-button" onClick={() => setEditMode(true)}>
               Edit Name
@@ -87,14 +77,14 @@ const Profile = () => {
                 type="text"
                 value={newUserFirstName}
                 onChange={(e) => setNewUserFirstName(e.target.value)}
-                placeholder={profile.firstName}
-              ></input>
+                placeholder={user.firstName}
+              />
               <input
                 type="text"
                 value={newUserLastName}
                 onChange={(e) => setNewUserLastName(e.target.value)}
-                placeholder={profile.lastName}
-              ></input>
+                placeholder={user.lastName}
+              />
             </div>
             <div className="edit-form__controls">
               <div
@@ -113,6 +103,7 @@ const Profile = () => {
           </div>
         )}
       </section>
+
       <section className="accounts">
         {accounts.map((account, index) => (
           <Account key={index} account={account} />
@@ -123,9 +114,3 @@ const Profile = () => {
 }
 
 export default Profile
-
-
-
-
-
-

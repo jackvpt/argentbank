@@ -1,12 +1,13 @@
-import React from "react"
 import "./Header.scss"
-import { Link, NavLink, useNavigate } from "react-router-dom"
+import React from "react"
+import { Link, useNavigate } from "react-router-dom"
 import logo from "../../assets/images/logo_argentbank.png"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons"
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons"
-import { useDispatch, useSelector } from "react-redux"
-import { logout } from "../../store/authSlice"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { fetchUserProfile } from "../../api/user"
+
 /** Renders the main navigation header of the application.
  *
  * @category Components
@@ -14,12 +15,21 @@ import { logout } from "../../store/authSlice"
  * @returns {React.Component} A React component displaying the header with navigation links.
  */
 const Header = () => {
-  const dispatch = useDispatch()
-  const userFirstName = useSelector((state) => state.auth.firstName)
+  const queryClient = useQueryClient()
+
   const navigate = useNavigate()
 
+  const { data: user, isSuccess } = useQuery({
+    queryKey: ["userProfile"],
+    queryFn: fetchUserProfile,
+    retry: false,
+    refetchOnWindowFocus: false,
+  })
+
   const handleSignOut = () => {
-    dispatch(logout())
+    localStorage.removeItem("token")
+    sessionStorage.removeItem("token")
+    queryClient.removeQueries({ queryKey: ["userProfile"] })
     navigate("/")
   }
 
@@ -33,10 +43,10 @@ const Header = () => {
       {/* Navigation menu */}
       <nav className="navbar">
         <FontAwesomeIcon icon={faCircleUser} className="navbar__icon" />
-        {userFirstName ? (
+        {isSuccess ? (
           <>
             <Link className="navbar__user" to="/profile">
-              {userFirstName}
+              {user.firstName}
             </Link>
             <p className="navbar__link" onClick={handleSignOut}>
               <FontAwesomeIcon
