@@ -1,3 +1,12 @@
+/**
+ * Fetches account data for a specific user from a local mock JSON file.
+ *
+ * @async
+ * @function fetchAccountsByUserId
+ * @param {string|number} userId - The ID of the user whose accounts are to be retrieved.
+ * @returns {Promise<Object[]>} A promise that resolves to an array of account objects for the specified user.
+ * @throws {Error} If the fetch fails, the response is not OK, or the user is not found in the mock data.
+ */
 export const fetchAccountsByUserId = async (userId) => {
   try {
     const response = await fetch("/__mocks__/accounts.json")

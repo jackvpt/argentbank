@@ -12,8 +12,7 @@ const Profile = () => {
   const [newUserFirstName, setNewUserFirstName] = useState("")
   const [newUserLastName, setNewUserLastName] = useState("")
   const dispatch = useDispatch()
-  const profile=useSelector((state) => state.auth)
-
+  const profile = useSelector((state) => state.auth)
 
   const {
     data: user,
@@ -37,9 +36,9 @@ const Profile = () => {
   }, [user, dispatch])
 
   const mutation = useMutation({
-    mutationFn:updateUserName,
+    mutationFn: updateUserName,
     onSuccess: (updatedUser) => {
-      console.log('updatedUser :>> ', updatedUser);
+      console.log("updatedUser :>> ", updatedUser)
       dispatch(setUser(updatedUser.body))
     },
     onError: (error) => {
@@ -55,8 +54,6 @@ const Profile = () => {
 
   if (isLoading || isLoadingAccounts) return <p>Loading profile...</p>
   if (isError) return <p>Unable to fetch user profile</p>
-
-  console.log('profile :>> ', profile);
 
   const handleSaveNewUser = () => {
     const updatedUser = {
@@ -90,13 +87,13 @@ const Profile = () => {
                 type="text"
                 value={newUserFirstName}
                 onChange={(e) => setNewUserFirstName(e.target.value)}
-                placeholder={user.firstName}
+                placeholder={profile.firstName}
               ></input>
               <input
                 type="text"
                 value={newUserLastName}
                 onChange={(e) => setNewUserLastName(e.target.value)}
-                placeholder={user.lastName}
+                placeholder={profile.lastName}
               ></input>
             </div>
             <div className="edit-form__controls">
@@ -126,3 +123,9 @@ const Profile = () => {
 }
 
 export default Profile
+
+
+
+
+
+
