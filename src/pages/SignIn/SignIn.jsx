@@ -3,7 +3,6 @@ import { useState } from "react"
 import { useMutation } from "@tanstack/react-query"
 import { login } from "../../api/auth"
 import { useNavigate } from "react-router-dom"
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons"
 
@@ -15,6 +14,8 @@ import { faCircleUser } from "@fortawesome/free-solid-svg-icons"
  */
 const SignIn = () => {
   const [email, setEmail] = useState("")
+  const [userNameIsValid, setUserNameIsValid] = useState(true)
+  const [passwordIsValid, setPasswordIsValid] = useState(true)
   const [password, setPassword] = useState("")
   const [rememberMe, setRememberMe] = useState(false)
   const navigate = useNavigate()
@@ -27,8 +28,6 @@ const SignIn = () => {
   const mutation = useMutation({
     mutationFn: () => login(email, password),
     onSuccess: (data) => {
-      // dispatch(loginSuccess(data))
-
       localStorage.removeItem("token")
       sessionStorage.removeItem("token")
       if (rememberMe) {
@@ -43,6 +42,24 @@ const SignIn = () => {
       console.error("Connection error: ", error)
     },
   })
+
+  const checkUserName = (userName) => {
+    setUserNameIsValid(userName.length >= 3)
+  }
+
+  /**
+   * Vérifie si le mot de passe est valide :
+   * - au moins 8 caractères
+   * - contient au moins une lettre
+   * - contient au moins un chiffre
+   *
+   * @param {string} password - Le mot de passe à valider.
+   * @returns {boolean} True si le mot de passe est valide, sinon false.
+   */
+  const checkPassword = (password) => {
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+    setPasswordIsValid(regex.test(password))
+  }
 
   /**
    * Handles form submission, preventing default behavior and triggering the login mutation.
@@ -61,24 +78,41 @@ const SignIn = () => {
         <h1>Sign In</h1>
         <form onSubmit={handleSubmit}>
           <div className="input-wrapper">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">
+              Username<span className="input-wrapper__required">*</span>
+            </label>
             <input
               type="text"
               id="username"
+              minLength="3"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onBlur={(e) => checkUserName(e.target.value)}
               required
             />
+            <div className="input-error">
+              {!userNameIsValid && "Username must be at least 3 characters"}
+            </div>
           </div>
           <div className="input-wrapper">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">
+              Password<span className="input-wrapper__required">*</span>
+            </label>
             <input
               type="password"
               id="password"
+              minLength="2"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onBlur={(e) => checkPassword(e.target.value)}
               required
             />
+            <div className="input-error">
+              {!passwordIsValid && "Password does not meet criteria"}
+            </div>
+          </div>
+          <div className="input-wrapper__required-text">
+            <span className="input-wrapper__required">*</span>Required fields
           </div>
           <div className="input-remember">
             <input
@@ -92,12 +126,16 @@ const SignIn = () => {
           <button
             className="sign-in-button"
             type="submit"
-            disabled={mutation.isLoading}
+            disabled={
+              mutation.isLoading || !userNameIsValid || !passwordIsValid
+            }
           >
             {mutation.isLoading ? "Connecting..." : "Sign In"}
           </button>
         </form>
-        {mutation.isError && <p>Connection error</p>}
+        {mutation.isError && (
+          <div className="signin-error">Invalid credentials</div>
+        )}
       </div>
     </main>
   )
