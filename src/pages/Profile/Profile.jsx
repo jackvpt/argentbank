@@ -4,6 +4,8 @@ import { fetchUserProfile, updateUserName } from "../../api/user"
 import Account from "../../components/Account/Account"
 import { fetchAccountsByUserId } from "../../api/accounts"
 import { useState } from "react"
+import Loader from "../../components/Loader/Loader"
+import ErrorMessage from "../../components/ErrorMessage/ErrorMessage"
 
 /**
  * Profile component displays user information and a list of accounts.
@@ -72,8 +74,8 @@ const Profile = () => {
     setEditMode(false)
   }
 
-  if (isLoading || isLoadingAccounts) return <p>Loading profile...</p>
-  if (isError) return <p>Unable to fetch user profile</p>
+  if (isLoading || isLoadingAccounts) return <Loader />
+  if (isError) return <ErrorMessage message="Server error"/>
 
   return (
     <main className="container__profile">
