@@ -1,6 +1,6 @@
 import "./SignIn.scss"
 import { useState } from "react"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { login } from "../../api/auth"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -20,6 +20,8 @@ const SignIn = () => {
   const [rememberMe, setRememberMe] = useState(false)
   const navigate = useNavigate()
 
+  const queryClient= useQueryClient()
+
   /**
    * Handles the login request using React Query's `useMutation`.
    * - On success: Stores the token in local/session storage, updates Redux state, and navigates to the profile page.
@@ -35,7 +37,7 @@ const SignIn = () => {
       } else {
         sessionStorage.setItem("token", data.body.token)
       }
-
+      queryClient.invalidateQueries(["userProfile"])
       navigate("/profile")
     },
     onError: (error) => {

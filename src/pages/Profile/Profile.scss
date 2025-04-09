@@ -3,7 +3,6 @@
 .container__profile {
   background-color: #12002b;
 
-
   &__header {
     display: flex;
     flex-direction: column;
@@ -30,7 +29,7 @@
       padding: 10px;
       cursor: pointer;
 
-      &:hover{
+      &:hover {
         background-color: #fff;
         color: #00bc77;
       }
@@ -41,7 +40,7 @@
       flex-direction: column;
       justify-content: space-between;
       gap: 10px;
-      margin-top:20px;
+      margin-top: 20px;
 
       &__inputs {
         display: flex;
@@ -51,11 +50,20 @@
 
         @include responsive-tablet {
           flex-direction: row;
-          gap:20px;
+          gap: 20px;
         }
 
         input {
           padding: 10px;
+          &:not(:focus) {
+            color: lightgray;
+          }
+          &:focus {
+            color: #fff;
+            background-color: #00bc77;
+            border: 1px solid #00bc77;
+            outline: none;
+          }
         }
       }
 
@@ -73,7 +81,7 @@
           padding: 5px 0;
           cursor: pointer;
 
-          &:hover{
+          &:hover {
             background-color: #00bc77;
             color: white;
           }

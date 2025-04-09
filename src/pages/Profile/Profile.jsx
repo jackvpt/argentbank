@@ -3,9 +3,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { fetchUserProfile, updateUserName } from "../../api/user"
 import Account from "../../components/Account/Account"
 import { fetchAccountsByUserId } from "../../api/accounts"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Loader from "../../components/Loader/Loader"
 import ErrorMessage from "../../components/ErrorMessage/ErrorMessage"
+import { toast } from "react-toastify"
 
 /**
  * Profile component displays user information and a list of accounts.
@@ -45,9 +46,11 @@ const Profile = () => {
     onSuccess: () => {
       // Refresh user profile after a successful update
       queryClient.invalidateQueries(["userProfile"])
+      toast.success("User name updated successfully!")
     },
     onError: (error) => {
       console.error("Error updating user name: ", error)
+      toast.error("Erreur lors de la mise à jour du nom")
     },
   })
 
@@ -55,8 +58,6 @@ const Profile = () => {
    * Cancel editing and reset input fields.
    */
   const handleCancelEdit = () => {
-    setNewUserFirstName("")
-    setNewUserLastName("")
     setEditMode(false)
   }
 
@@ -68,14 +69,26 @@ const Profile = () => {
       firstName: newUserFirstName || user.firstName,
       lastName: newUserLastName || user.lastName,
     }
-    mutation.mutate(updatedUser)
-    setNewUserFirstName("")
-    setNewUserLastName("")
+    if (
+      newUserFirstName !== user.firstName ||
+      newUserLastName !== user.lastName
+    ) {
+      mutation.mutate(updatedUser)
+      setNewUserFirstName("")
+      setNewUserLastName("")
+    }
     setEditMode(false)
   }
 
+  useEffect(() => {
+    if (user) {
+      setNewUserFirstName(user.firstName)
+      setNewUserLastName(user.lastName)
+    }
+  }, [user])
+
   if (isLoading || isLoadingAccounts) return <Loader />
-  if (isError) return <ErrorMessage message="Server error"/>
+  if (isError) return <ErrorMessage message="Server error" />
 
   return (
     <main className="container__profile">
@@ -98,13 +111,11 @@ const Profile = () => {
                 type="text"
                 value={newUserFirstName}
                 onChange={(e) => setNewUserFirstName(e.target.value)}
-                placeholder={user.firstName}
               />
               <input
                 type="text"
                 value={newUserLastName}
                 onChange={(e) => setNewUserLastName(e.target.value)}
-                placeholder={user.lastName}
               />
             </div>
             <div className="edit-form__controls">

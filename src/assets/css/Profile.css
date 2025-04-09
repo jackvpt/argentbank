@@ -53,6 +53,15 @@
 .container__profile__header .edit-form__inputs input {
   padding: 10px;
 }
+.container__profile__header .edit-form__inputs input:not(:focus) {
+  color: lightgray;
+}
+.container__profile__header .edit-form__inputs input:focus {
+  color: #fff;
+  background-color: #00bc77;
+  border: 1px solid #00bc77;
+  outline: none;
+}
 .container__profile__header .edit-form__controls {
   display: flex;
   flex-direction: row;
