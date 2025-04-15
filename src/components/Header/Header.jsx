@@ -5,8 +5,8 @@ import logo from "../../assets/images/logo_argentbank.png"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons"
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { fetchUserProfile } from "../../api/user"
+import { useDispatch, useSelector } from "react-redux"
+import { logout } from "../../features/userSlice"
 
 /** Renders the main navigation header of the application.
  *
@@ -15,21 +15,16 @@ import { fetchUserProfile } from "../../api/user"
  * @returns {React.Component} A React component displaying the header with navigation links.
  */
 const Header = () => {
-  const queryClient = useQueryClient()
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.user)
 
   const navigate = useNavigate()
 
-  const { data: user, isSuccess } = useQuery({
-    queryKey: ["userProfile"],
-    queryFn: fetchUserProfile,
-    retry: false,
-    refetchOnWindowFocus: false,
-  })
 
   const handleSignOut = () => {
     localStorage.removeItem("token")
     sessionStorage.removeItem("token")
-    queryClient.removeQueries({ queryKey: ["userProfile"] })
+    dispatch(logout())
     navigate("/")
   }
 
@@ -43,7 +38,7 @@ const Header = () => {
       {/* Navigation menu */}
       <nav className="navbar">
         <FontAwesomeIcon icon={faCircleUser} className="navbar__icon" />
-        {isSuccess ? (
+        {user.isAuthenticated ? (
           <>
             <Link className="navbar__user" to="/profile">
               {user.firstName}

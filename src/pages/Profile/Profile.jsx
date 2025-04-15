@@ -7,6 +7,8 @@ import { useEffect, useState } from "react"
 import Loader from "../../components/Loader/Loader"
 import ErrorMessage from "../../components/ErrorMessage/ErrorMessage"
 import { toast } from "react-toastify"
+import { useDispatch } from "react-redux"
+import { updateUserInfo } from "../../features/userSlice"
 
 /**
  * Profile component displays user information and a list of accounts.
@@ -16,6 +18,7 @@ import { toast } from "react-toastify"
  * @returns {JSX.Element}
  */
 const Profile = () => {
+  const dispatch = useDispatch()
   // Local state to handle edit mode and input values
   const [editMode, setEditMode] = useState(false)
   const [newUserFirstName, setNewUserFirstName] = useState("")
@@ -74,6 +77,12 @@ const Profile = () => {
       newUserLastName !== user.lastName
     ) {
       mutation.mutate(updatedUser)
+      dispatch(
+        updateUserInfo({
+          firstName: newUserFirstName,
+          lastName: newUserLastName,
+        })
+      )
       setNewUserFirstName("")
       setNewUserLastName("")
     }
@@ -98,7 +107,7 @@ const Profile = () => {
         {!editMode ? (
           <>
             <p className="user-name">
-              {user.firstName} {user.lastName}
+              {user.firstName} {user.lastName}!
             </p>
             <button className="edit-button" onClick={() => setEditMode(true)}>
               Edit Name

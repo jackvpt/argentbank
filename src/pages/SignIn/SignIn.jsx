@@ -1,10 +1,12 @@
 import "./SignIn.scss"
 import { useState } from "react"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { login } from "../../api/auth"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons"
+import { useDispatch } from "react-redux"
+import { fetchUserProfile } from "../../features/userSlice"
 
 /**
  * SignIn component allows users to log in by providing their credentials.
@@ -13,14 +15,13 @@ import { faCircleUser } from "@fortawesome/free-solid-svg-icons"
  * @returns {JSX.Element} The sign-in form with input fields for email and password.
  */
 const SignIn = () => {
+  const dispatch=useDispatch()
   const [email, setEmail] = useState("")
   const [userNameIsValid, setUserNameIsValid] = useState(true)
   const [passwordIsValid, setPasswordIsValid] = useState(true)
   const [password, setPassword] = useState("")
   const [rememberMe, setRememberMe] = useState(false)
   const navigate = useNavigate()
-
-  const queryClient= useQueryClient()
 
   /**
    * Handles the login request using React Query's `useMutation`.
@@ -37,7 +38,7 @@ const SignIn = () => {
       } else {
         sessionStorage.setItem("token", data.body.token)
       }
-      queryClient.invalidateQueries(["userProfile"])
+      dispatch(fetchUserProfile(data.body.token))
       navigate("/profile")
     },
     onError: (error) => {
