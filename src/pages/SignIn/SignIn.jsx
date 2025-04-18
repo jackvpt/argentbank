@@ -1,7 +1,7 @@
 import "./SignIn.scss"
 import { useState } from "react"
 import { useMutation } from "@tanstack/react-query"
-import { login } from "../../api/auth"
+import { login } from "../../features/authSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons"
@@ -72,9 +72,19 @@ const SignIn = () => {
    *
    * @param {React.FormEvent<HTMLFormElement>} e - The form submission event.
    */
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    mutation.mutate()
+    try {
+      const resultAction = await dispatch(
+        login({ email, password, rememberMe })
+      ).unwrap()
+      const token = resultAction.token
+      dispatch(fetchUserProfile(token))
+    } catch (err) {
+      console.error("Login failed:", err)
+    }
+
+    navigate("/profile")
   }
 
   return (

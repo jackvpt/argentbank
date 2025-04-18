@@ -9,6 +9,7 @@ import ErrorMessage from "../../components/ErrorMessage/ErrorMessage"
 import { toast } from "react-toastify"
 import { useDispatch, useSelector } from "react-redux"
 import { updateUserInfo } from "../../features/userSlice"
+import { useNavigate } from "react-router"
 
 /**
  * Profile component displays user information and a list of accounts.
@@ -20,6 +21,14 @@ import { updateUserInfo } from "../../features/userSlice"
 const Profile = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login")
+    }
+  }, [isAuthenticated, navigate])
 
   // Local state to handle edit mode and input values
   const [editMode, setEditMode] = useState(false)
@@ -59,9 +68,7 @@ const Profile = () => {
   const mutation = useMutation({
     mutationFn: updateUserName,
     onSuccess: (data, variables) => {
-      dispatch(
-        updateUserInfo(variables)
-      )
+      dispatch(updateUserInfo(variables))
       queryClient.invalidateQueries(["userProfile"])
       toast.success("User name updated successfully!")
     },
@@ -70,6 +77,12 @@ const Profile = () => {
       toast.error("Erreur lors de la mise à jour du nom")
     },
   })
+
+  const handleEdit=()=>{
+    setNewUserFirstName(user.firstName)
+    setNewUserLastName(user.lastName) 
+    setEditMode(true)
+  }
 
   /**
    * Cancel editing and reset input fields.
@@ -103,12 +116,12 @@ const Profile = () => {
   /**
    * Updates local input fields when the user data changes.
    */
-  useEffect(() => {
-    if (user.id) {
-      setNewUserFirstName(user.firstName)
-      setNewUserLastName(user.lastName)
-    }
-  }, [user])
+  // useEffect(() => {
+  //   if (user.id) {
+  //     setNewUserFirstName(user.firstName)
+  //     setNewUserLastName(user.lastName)
+  //   }
+  // }, [user])
 
   if (isLoadingAccounts || !user.id) return <Loader />
   if (error) return <ErrorMessage message="Server error" />
@@ -123,7 +136,7 @@ const Profile = () => {
             <p className="user-name">
               {user.firstName} {user.lastName}!
             </p>
-            <button className="edit-button" onClick={() => setEditMode(true)}>
+            <button className="edit-button" onClick={handleEdit}>
               Edit Name
             </button>
           </>

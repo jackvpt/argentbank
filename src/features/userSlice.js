@@ -20,7 +20,6 @@ const initialState = {
   firstName: "",
   lastName: "",
   email: "",
-  isAuthenticated: false,
   loading: false,
   error: null,
 }
@@ -71,7 +70,6 @@ const userSlice = createSlice({
       state.firstName = ""
       state.lastName = ""
       state.email = ""
-      state.isAuthenticated = false
       state.loading = false
       state.error = null
     },
@@ -104,7 +102,6 @@ const userSlice = createSlice({
         state.firstName = firstName
         state.lastName = lastName
         state.email = email
-        state.isAuthenticated = true
         state.loading = false
       })
       .addCase(fetchUserProfile.rejected, (state, action) => {

@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons"
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons"
 import { useDispatch, useSelector } from "react-redux"
-import { logout } from "../../features/userSlice"
+import { logout } from "../../features/authSlice"
 
 /** Renders the main navigation header of the application.
  *
@@ -17,9 +17,9 @@ import { logout } from "../../features/userSlice"
 const Header = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
 
   const navigate = useNavigate()
-
 
   const handleSignOut = () => {
     localStorage.removeItem("token")
@@ -32,13 +32,13 @@ const Header = () => {
     <header>
       {/* Logo of the application */}
       <Link to="/">
-        <img src={logo} alt="Logo SportSee"></img>
+        <img src={logo} alt="logo argentbank"></img>
       </Link>
 
       {/* Navigation menu */}
       <nav className="navbar">
         <FontAwesomeIcon icon={faCircleUser} className="navbar__icon" />
-        {user.isAuthenticated ? (
+        {isAuthenticated ? (
           <>
             <Link className="navbar__user" to="/profile">
               {user.firstName}
@@ -54,7 +54,7 @@ const Header = () => {
         ) : (
           <Link
             className="navbar__link"
-            to="/login" // Links to Home page
+            to="/login"
           >
             Sign In
           </Link>
