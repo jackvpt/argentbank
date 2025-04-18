@@ -113,16 +113,6 @@ const Profile = () => {
     setEditMode(false)
   }
 
-  /**
-   * Updates local input fields when the user data changes.
-   */
-  // useEffect(() => {
-  //   if (user.id) {
-  //     setNewUserFirstName(user.firstName)
-  //     setNewUserLastName(user.lastName)
-  //   }
-  // }, [user])
-
   if (isLoadingAccounts || !user.id) return <Loader />
   if (error) return <ErrorMessage message="Server error" />
 
