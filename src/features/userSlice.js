@@ -1,7 +1,20 @@
-// src/features/user/userSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
 
+/**
+ * Initial state for the user slice.
+ * 
+ * @typedef {Object} UserState
+ * @property {string|null} id - The user's ID.
+ * @property {string} firstName - The user's first name.
+ * @property {string} lastName - The user's last name.
+ * @property {string} email - The user's email address.
+ * @property {boolean} isAuthenticated - Whether the user is authenticated.
+ * @property {boolean} loading - Whether a request is currently in progress.
+ * @property {string|null} error - Error message, if any.
+ */
+
+/** @type {UserState} */
 const initialState = {
   id: null,
   firstName: "",
@@ -12,7 +25,12 @@ const initialState = {
   error: null,
 }
 
-// Thunk pour récupérer les infos utilisateur après le login
+/**
+ * Async thunk to fetch the user's profile data from the backend API.
+ *
+ * @param {string} token - The authentication token to include in the request.
+ * @returns {Promise<Object>} The user's profile data from the API response.
+ */
 export const fetchUserProfile = createAsyncThunk(
   "user/fetchUserProfile",
   async (token, { rejectWithValue }) => {
@@ -36,10 +54,18 @@ export const fetchUserProfile = createAsyncThunk(
   }
 )
 
+/**
+ * Redux slice for user authentication and profile information.
+ */
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    /**
+     * Logs out the user and resets user-related state.
+     *
+     * @param {UserState} state - The current state of the user slice.
+     */
     logout: (state) => {
       state.id = null
       state.firstName = ""
@@ -49,6 +75,13 @@ const userSlice = createSlice({
       state.loading = false
       state.error = null
     },
+
+    /**
+     * Updates the user's first and/or last name.
+     *
+     * @param {UserState} state - The current state of the user slice.
+     * @param {{ payload: { firstName?: string, lastName?: string } }} action - The action containing updated user info.
+     */
     updateUserInfo: (state, action) => {
       const { firstName, lastName } = action.payload
       if (firstName !== undefined) {

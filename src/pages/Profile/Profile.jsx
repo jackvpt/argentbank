@@ -1,13 +1,13 @@
 import "./Profile.scss"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { fetchUserProfile, updateUserName } from "../../api/user"
+import { updateUserName } from "../../api/user"
 import Account from "../../components/Account/Account"
 import { fetchAccountsByUserId } from "../../api/accounts"
 import { useEffect, useState } from "react"
 import Loader from "../../components/Loader/Loader"
 import ErrorMessage from "../../components/ErrorMessage/ErrorMessage"
 import { toast } from "react-toastify"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { updateUserInfo } from "../../features/userSlice"
 
 /**
@@ -19,35 +19,49 @@ import { updateUserInfo } from "../../features/userSlice"
  */
 const Profile = () => {
   const dispatch = useDispatch()
+  const user = useSelector((state) => state.user)
+
   // Local state to handle edit mode and input values
   const [editMode, setEditMode] = useState(false)
+
+  /**
+   * Stores the updated first name input value.
+   * @type {[string, Function]}
+   */
   const [newUserFirstName, setNewUserFirstName] = useState("")
+
+  /**
+   * Stores the updated last name input value.
+   * @type {[string, Function]}
+   */
   const [newUserLastName, setNewUserLastName] = useState("")
 
   const queryClient = useQueryClient()
 
-  // Fetch user profile data
+  /**
+   * Query to fetch the user's account data using their ID.
+   * Enabled only when user ID is available.
+   */
   const {
-    data: user,
-    isLoading,
-    isError,
+    data: accounts,
+    isLoading: isLoadingAccounts,
+    error,
   } = useQuery({
-    queryKey: ["userProfile"],
-    queryFn: fetchUserProfile,
-  })
-
-  // Fetch user accounts once the user data is available
-  const { data: accounts, isLoading: isLoadingAccounts } = useQuery({
     queryKey: ["accounts", user?.id],
-    queryFn: () => fetchAccountsByUserId(user.id),
-    enabled: !!user, // Only run this query if user is available
+    queryFn: () => fetchAccountsByUserId(user?.id),
+    enabled: !!user.id,
   })
 
-  // Mutation to update the user's name
+  /**
+   * Mutation to update the user's name.
+   * On success, invalidates the user profile query and shows a toast notification.
+   */
   const mutation = useMutation({
     mutationFn: updateUserName,
-    onSuccess: () => {
-      // Refresh user profile after a successful update
+    onSuccess: (data, variables) => {
+      dispatch(
+        updateUserInfo(variables)
+      )
       queryClient.invalidateQueries(["userProfile"])
       toast.success("User name updated successfully!")
     },
@@ -59,6 +73,7 @@ const Profile = () => {
 
   /**
    * Cancel editing and reset input fields.
+   * Exits the edit mode without saving changes.
    */
   const handleCancelEdit = () => {
     setEditMode(false)
@@ -66,38 +81,37 @@ const Profile = () => {
 
   /**
    * Save new user name and exit edit mode.
+   * If values are different, triggers a mutation and updates Redux state.
    */
   const handleSaveNewUser = () => {
     const updatedUser = {
       firstName: newUserFirstName || user.firstName,
       lastName: newUserLastName || user.lastName,
     }
+
     if (
       newUserFirstName !== user.firstName ||
       newUserLastName !== user.lastName
     ) {
       mutation.mutate(updatedUser)
-      dispatch(
-        updateUserInfo({
-          firstName: newUserFirstName,
-          lastName: newUserLastName,
-        })
-      )
       setNewUserFirstName("")
       setNewUserLastName("")
     }
     setEditMode(false)
   }
 
+  /**
+   * Updates local input fields when the user data changes.
+   */
   useEffect(() => {
-    if (user) {
+    if (user.id) {
       setNewUserFirstName(user.firstName)
       setNewUserLastName(user.lastName)
     }
   }, [user])
 
-  if (isLoading || isLoadingAccounts) return <Loader />
-  if (isError) return <ErrorMessage message="Server error" />
+  if (isLoadingAccounts || !user.id) return <Loader />
+  if (error) return <ErrorMessage message="Server error" />
 
   return (
     <main className="container__profile">
@@ -120,11 +134,13 @@ const Profile = () => {
                 type="text"
                 value={newUserFirstName}
                 onChange={(e) => setNewUserFirstName(e.target.value)}
+                onFocus={(e) => e.target.select()}
               />
               <input
                 type="text"
                 value={newUserLastName}
                 onChange={(e) => setNewUserLastName(e.target.value)}
+                onFocus={(e) => e.target.select()}
               />
             </div>
             <div className="edit-form__controls">

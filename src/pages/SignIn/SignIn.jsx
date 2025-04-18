@@ -15,7 +15,7 @@ import { fetchUserProfile } from "../../features/userSlice"
  * @returns {JSX.Element} The sign-in form with input fields for email and password.
  */
 const SignIn = () => {
-  const dispatch=useDispatch()
+  const dispatch = useDispatch()
   const [email, setEmail] = useState("")
   const [userNameIsValid, setUserNameIsValid] = useState(true)
   const [passwordIsValid, setPasswordIsValid] = useState(true)
@@ -33,11 +33,9 @@ const SignIn = () => {
     onSuccess: (data) => {
       localStorage.removeItem("token")
       sessionStorage.removeItem("token")
-      if (rememberMe) {
-        localStorage.setItem("token", data.body.token)
-      } else {
-        sessionStorage.setItem("token", data.body.token)
-      }
+      sessionStorage.setItem("token", data.body.token)
+      if (rememberMe) localStorage.setItem("token", data.body.token)
+
       dispatch(fetchUserProfile(data.body.token))
       navigate("/profile")
     },
@@ -46,18 +44,23 @@ const SignIn = () => {
     },
   })
 
+  /**
+   * Checks if a username is valid based on its length.
+   * @param {string} userName
+   */
   const checkUserName = (userName) => {
     setUserNameIsValid(userName.length >= 3)
   }
 
   /**
-   * Vérifie si le mot de passe est valide :
-   * - au moins 8 caractères
-   * - contient au moins une lettre
-   * - contient au moins un chiffre
+   * Checks if a password is valid based on the following criteria:
+   * - At least 8 characters long
+   * - Contains at least one letter (uppercase or lowercase)
+   * - Contains at least one number
    *
-   * @param {string} password - Le mot de passe à valider.
-   * @returns {boolean} True si le mot de passe est valide, sinon false.
+   * Updates the `passwordIsValid` state with `true` if the password is valid, otherwise `false`.
+   *
+   * @param {string} password - The password to validate.
    */
   const checkPassword = (password) => {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/

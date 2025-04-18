@@ -64,6 +64,10 @@
             border: 1px solid #00bc77;
             outline: none;
           }
+          &::selection{
+            background-color: white;
+            color: black;
+          }
         }
       }
 
@@ -75,6 +79,7 @@
 
         &__button {
           width: 120px;
+          font-weight: 700;
           border-color: #00bc77;
           background-color: white;
           color: #00bc77;
