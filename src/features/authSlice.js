@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
+import { resetUserInfos } from "./userSlice"
 
 /**
  * Async thunk for user login.
@@ -42,6 +43,18 @@ export const login = createAsyncThunk(
     }
   }
 )
+
+export const logout = () => async (dispatch) => {
+  // Effacer les tokens
+  localStorage.removeItem("token")
+  sessionStorage.removeItem("token")
+
+  // Réinitialiser les informations utilisateur
+  dispatch(resetUserInfos()) // Appeler l'action pour réinitialiser l'état de l'utilisateur
+  dispatch({
+    type: "auth/logout",
+  })
+}
 
 /**
  * Initial token retrieved from storage if it exists.
@@ -94,6 +107,8 @@ const authSlice = createSlice({
       state.error = null
       localStorage.removeItem("token")
       sessionStorage.removeItem("token")
+
+      resetUserInfos()
     },
   },
   extraReducers: (builder) => {
@@ -124,5 +139,5 @@ const authSlice = createSlice({
   },
 })
 
-export const { loginSuccess, logout } = authSlice.actions
+export const { loginSuccess } = authSlice.actions
 export default authSlice.reducer

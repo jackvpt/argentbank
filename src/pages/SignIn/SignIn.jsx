@@ -1,11 +1,10 @@
 import "./SignIn.scss"
 import { useState } from "react"
-import { useMutation } from "@tanstack/react-query"
 import { login } from "../../features/authSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { fetchUserProfile } from "../../features/userSlice"
 
 /**
@@ -16,33 +15,13 @@ import { fetchUserProfile } from "../../features/userSlice"
  */
 const SignIn = () => {
   const dispatch = useDispatch()
+  const {loading:authLoading, error:authError} = useSelector((state) => state.auth)
   const [email, setEmail] = useState("")
   const [userNameIsValid, setUserNameIsValid] = useState(true)
   const [passwordIsValid, setPasswordIsValid] = useState(true)
   const [password, setPassword] = useState("")
   const [rememberMe, setRememberMe] = useState(false)
   const navigate = useNavigate()
-
-  /**
-   * Handles the login request using React Query's `useMutation`.
-   * - On success: Stores the token in local/session storage, updates Redux state, and navigates to the profile page.
-   * - On error: Logs an error message.
-   */
-  const mutation = useMutation({
-    mutationFn: () => login(email, password),
-    onSuccess: (data) => {
-      localStorage.removeItem("token")
-      sessionStorage.removeItem("token")
-      sessionStorage.setItem("token", data.body.token)
-      if (rememberMe) localStorage.setItem("token", data.body.token)
-
-      dispatch(fetchUserProfile(data.body.token))
-      navigate("/profile")
-    },
-    onError: (error) => {
-      console.error("Connection error: ", error)
-    },
-  })
 
   /**
    * Checks if a username is valid based on its length.
@@ -143,13 +122,13 @@ const SignIn = () => {
             className="sign-in-button"
             type="submit"
             disabled={
-              mutation.isLoading || !userNameIsValid || !passwordIsValid
+              authLoading || !userNameIsValid || !passwordIsValid
             }
           >
-            {mutation.isLoading ? "Connecting..." : "Sign In"}
+            {authLoading ? "Connecting..." : "Sign In"}
           </button>
         </form>
-        {mutation.isError && (
+        {authError && (
           <div className="signin-error">Invalid credentials</div>
         )}
       </div>

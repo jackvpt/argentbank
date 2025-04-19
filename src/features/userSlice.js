@@ -3,7 +3,7 @@ import axios from "axios"
 
 /**
  * Initial state for the user slice.
- * 
+ *
  * @typedef {Object} UserState
  * @property {string|null} id - The user's ID.
  * @property {string} firstName - The user's first name.
@@ -60,18 +60,8 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    /**
-     * Logs out the user and resets user-related state.
-     *
-     * @param {UserState} state - The current state of the user slice.
-     */
-    logout: (state) => {
-      state.id = null
-      state.firstName = ""
-      state.lastName = ""
-      state.email = ""
-      state.loading = false
-      state.error = null
+    resetUserInfos: (state) => {
+      return state.initialState
     },
 
     /**
@@ -111,5 +101,5 @@ const userSlice = createSlice({
   },
 })
 
-export const { logout, updateUserInfo } = userSlice.actions
+export const { resetUserInfos, updateUserInfo } = userSlice.actions
 export default userSlice.reducer
