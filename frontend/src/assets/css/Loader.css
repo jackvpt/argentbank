@@ -1,0 +1,94 @@
+@charset "UTF-8";
+.loader__modal {
+  position: relative;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader-text {
+  font-weight: bold;
+  color: #00bc77;
+  margin-top: 1rem;
+  animation: fadeInOut 2s ease-in-out infinite; /* Effet sobre du texte */
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.1;
+  }
+}
+.chase-container {
+  position: relative;
+  width: 200px;
+  margin: 2rem auto;
+}
+
+.chase-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 4px;
+  padding: 15px;
+}
+
+/* Objet qui se déplace autour du rectangle */
+.chase-object {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: #00bc77;
+  animation: chase 4s linear infinite;
+}
+
+.chase-object.small {
+  width: 13px;
+  height: 13px;
+  background-color: #00bc77;
+  animation-delay: 1s; /* Délai pour rendre le mouvement décalé */
+}
+
+.chase-object.smaller {
+  width: 11px;
+  height: 11px;
+  background-color: #00bc77;
+  animation-delay: 2s; /* Délai pour un autre effet de décalage */
+}
+
+/* Animation qui fait parcourir les objets autour du rectangle */
+@keyframes chase {
+  0% {
+    top: 0;
+    left: 0;
+  }
+  25% {
+    top: 0;
+    left: 100%;
+    transform: translateX(-100%);
+  }
+  50% {
+    top: 100%;
+    left: 100%;
+    transform: translateY(-100%) translateX(-100%);
+  }
+  75% {
+    top: 100%;
+    left: 0;
+    transform: translateY(-100%);
+  }
+  100% {
+    top: 0;
+    left: 0;
+  }
+}/*# sourceMappingURL=Loader.css.map */

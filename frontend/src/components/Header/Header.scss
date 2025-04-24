@@ -1,0 +1,48 @@
+@use "../../styles/utils/mixins" as *;
+
+header {
+  padding: 5px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+
+  @include responsive-tablet {
+    flex-direction: row;
+  }
+
+  img {
+    width: 200px;
+  }
+}
+
+.navbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 8px 0 0;
+
+  &__link {
+    text-decoration: none;
+    color: #2c3e50;
+    font-weight: bold;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__icon {
+    margin-right: 5px;
+  }
+
+  &__user {
+    font-weight: bold;
+    margin-right: 20px;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

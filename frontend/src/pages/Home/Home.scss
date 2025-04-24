@@ -1,0 +1,9 @@
+@use "../../styles/utils/mixins" as *;
+
+.container__features {
+  display: flex;
+  flex-direction: column;
+  @include responsive-desktop {
+    flex-direction: row;
+  }
+}

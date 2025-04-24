@@ -1,0 +1,10 @@
+.container__error {
+  display: flex;
+  flex-direction: column;
+}
+.container__error-message {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}/*# sourceMappingURL=ErrorMessage.css.map */

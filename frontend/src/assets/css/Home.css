@@ -1,0 +1,11 @@
+/* Responsive */
+/* Responsive */
+.container__features {
+  display: flex;
+  flex-direction: column;
+}
+@media all and (min-width: 920px) {
+  .container__features {
+    flex-direction: row;
+  }
+}/*# sourceMappingURL=Home.css.map */

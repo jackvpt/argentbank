@@ -1,0 +1,121 @@
+@use "../../styles/utils/mixins" as *;
+
+.container__signin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #12002b;
+  padding: 20px 10px;
+
+  &__content {
+    background-color: white;
+    width: 300px;
+    margin: 0 auto;
+    padding: 10px;
+
+    @include responsive-tablet {
+      padding: 20px;
+    }
+
+    .input-remember {
+      display: flex;
+    }
+
+    .input-remember label {
+      margin-left: 0.25rem;
+    }
+
+    .input-wrapper {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      margin: 1rem 0 0.5rem;
+    }
+
+    .input-wrapper label {
+      font-weight: bold;
+    }
+
+    .input-wrapper {
+      &__required {
+        margin-left: 5px;
+        color: red;
+        font-weight: bold;
+        font-size: 1.2rem;
+
+        &-text {
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
+          font-size: 0.8rem;
+          margin-bottom: 10px;
+        }
+      }
+
+      input {
+        padding: 5px;
+        font-size: 1.2rem;
+      }
+
+      .input-error {
+        color: red;
+        font-size: 0.8rem;
+        margin-top: 5px;
+      }
+    }
+
+    .sign-in-button {
+      display: block;
+      width: 100%;
+      padding: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-decoration: underline;
+      margin-top: 1rem;
+      border-color: #00bc77;
+      background-color: #00bc77;
+      color: #fff;
+      cursor: pointer;
+      border: none;
+
+      &:hover {
+        background-color: #00a65a;
+      }
+
+      &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+    }
+
+    .signin-error {
+      margin-top: 1rem;
+      color: #ff4d4d;
+      background-color: #ffeaea;
+      padding: 0.75rem 1rem;
+      border-left: 4px solid #ff0000;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      max-width: 400px;
+      animation: shake-rotation 0.5s ease-in-out;
+    }
+
+    @keyframes shake-rotation {
+      0% {
+        transform: rotate(0deg);
+      }
+      25% {
+        transform: rotate(-1deg);
+      }
+      50% {
+        transform: rotate(1deg);
+      }
+      75% {
+        transform: rotate(-1deg);
+      }
+      100% {
+        transform: rotate(0deg);
+      }
+    }
+  }
+}

@@ -1,0 +1,51 @@
+@use "../utils/variables" as *;
+@use "../utils/mixins" as *;
+
+* {
+  font-family: $font_body;
+  font-size: 16px;
+  font-weight: 500;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  outline: none;
+  color: inherit;
+}
+
+html {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  color: #2c3e50;
+}
+
+body {
+  margin: 0 auto;
+  width: 100%;
+  background-color: white;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 1.25rem 0;
+}

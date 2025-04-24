@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/Profile/Profile.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/Profile/Profile.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file Profile.jsx
+ * @description The Profile component displays the user's profile information and their list of accounts. 
+ * It allows the user to edit their first and last name.
+ */
+
+import "./Profile.scss"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { updateUserName } from "../../api/user"
+import Account from "../../components/Account/Account"
+import { fetchAccountsByUserId } from "../../api/accounts"
+import { useEffect, useState } from "react"
+import Loader from "../../components/Loader/Loader"
+import ErrorMessage from "../../components/ErrorMessage/ErrorMessage"
+import { toast } from "react-toastify"
+import { useDispatch, useSelector } from "react-redux"
+import { updateUserInfo } from "../../features/userSlice"
+import { useNavigate } from "react-router"
+
+/**
+ * Profile component displays the user's information and a list of accounts.
+ * It allows the user to edit their first and last name.
+ *
+ * @component
+ * @returns {JSX.Element}
+ */
+const Profile = () => {
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.user)
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
+  const navigate = useNavigate()
+
+  /**
+   * Redirects to login page if the user is not authenticated.
+   */
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login")
+    }
+  }, [isAuthenticated, navigate])
+
+  // Local state to handle edit mode and input values
+  const [editMode, setEditMode] = useState(false)
+
+  /**
+   * Stores the updated first name input value.
+ * @type {Array.&lt;string, Function>}
+   */
+  const [newUserFirstName, setNewUserFirstName] = useState("")
+
+  /**
+   * Stores the updated last name input value.
+ * @type {Array.&lt;string, Function>}
+   */
+  const [newUserLastName, setNewUserLastName] = useState("")
+
+  const queryClient = useQueryClient()
+
+  /**
+   * Query to fetch the user's account data using their ID.
+   * Enabled only when user ID is available.
+   */
+  const {
+    data: accounts,
+    isLoading: isLoadingAccounts,
+    error,
+  } = useQuery({
+    queryKey: ["accounts", user?.id],
+    queryFn: () => fetchAccountsByUserId(user?.id),
+    enabled: !!user.id,
+  })
+
+  /**
+   * Mutation to update the user's name.
+   * On success, invalidates the user profile query and shows a toast notification.
+   */
+  const mutation = useMutation({
+    mutationFn: updateUserName,
+    onSuccess: (data, variables) => {
+      dispatch(updateUserInfo(variables))
+      queryClient.invalidateQueries(["userProfile"])
+      toast.success("User name updated successfully!")
+    },
+    onError: (error) => {
+      console.error("Error updating user name: ", error)
+      toast.error("Error updating the name")
+    },
+  })
+
+  /**
+   * Enables edit mode and populates the input fields with the current name values.
+   */
+  const handleEdit = () => {
+    setNewUserFirstName(user.firstName)
+    setNewUserLastName(user.lastName)
+    setEditMode(true)
+  }
+
+  /**
+   * Cancels the editing process and resets input fields.
+   * Exits the edit mode without saving any changes.
+   */
+  const handleCancelEdit = () => {
+    setEditMode(false)
+  }
+
+  /**
+   * Saves the new user name and exits edit mode.
+   * If the name values have changed, triggers the mutation to update the name and updates the Redux state.
+   */
+  const handleSaveNewUser = () => {
+    const updatedUser = {
+      firstName: newUserFirstName || user.firstName,
+      lastName: newUserLastName || user.lastName,
+    }
+
+    if (
+      newUserFirstName !== user.firstName ||
+      newUserLastName !== user.lastName
+    ) {
+      mutation.mutate(updatedUser)
+      setNewUserFirstName("")
+      setNewUserLastName("")
+    }
+    setEditMode(false)
+  }
+
+  if (isLoadingAccounts || !user.id) return &lt;Loader />
+  if (error) return &lt;ErrorMessage message="Server error" />
+
+  return (
+    &lt;main className="container__profile">
+      &lt;section className="container__profile__header">
+        &lt;h1>Welcome back&lt;/h1>
+        {!editMode ? (
+          &lt;>
+            &lt;p className="user-name">
+              {user.firstName} {user.lastName}!
+            &lt;/p>
+            &lt;button className="edit-button" onClick={handleEdit}>
+              Edit Name
+            &lt;/button>
+          &lt;/>
+        ) : (
+          &lt;div className="edit-form">
+            &lt;div className="edit-form__inputs">
+              &lt;input
+                type="text"
+                value={newUserFirstName}
+                onChange={(e) => setNewUserFirstName(e.target.value)}
+                onFocus={(e) => e.target.select()}
+              />
+              &lt;input
+                type="text"
+                value={newUserLastName}
+                onChange={(e) => setNewUserLastName(e.target.value)}
+                onFocus={(e) => e.target.select()}
+              />
+            &lt;/div>
+            &lt;div className="edit-form__controls">
+              &lt;div
+                className="edit-form__controls__button"
+                onClick={handleSaveNewUser}
+              >
+                Save
+              &lt;/div>
+              &lt;div
+                className="edit-form__controls__button"
+                onClick={handleCancelEdit}
+              >
+                Cancel
+              &lt;/div>
+            &lt;/div>
+          &lt;/div>
+        )}
+      &lt;/section>
+
+      &lt;section className="accounts">
+        {accounts.map((account, index) => (
+          &lt;Account key={index} account={account} />
+        ))}
+      &lt;/section>
+    &lt;/main>
+  )
+}
+
+export default Profile
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Account">Account</a></li><li><a href="global.html#ErrorMessage">ErrorMessage</a></li><li><a href="global.html#FeatureItem">FeatureItem</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#Hero">Hero</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#Loader">Loader</a></li><li><a href="global.html#Profile">Profile</a></li><li><a href="global.html#SignIn">SignIn</a></li><li><a href="global.html#authSlice">authSlice</a></li><li><a href="global.html#clearStorage">clearStorage</a></li><li><a href="global.html#fetchAccountsByUserId">fetchAccountsByUserId</a></li><li><a href="global.html#fetchUserProfile">fetchUserProfile</a></li><li><a href="global.html#initialState">initialState</a></li><li><a href="global.html#initialToken">initialToken</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#queryClient">queryClient</a></li><li><a href="global.html#store">store</a></li><li><a href="global.html#updateUserName">updateUserName</a></li><li><a href="global.html#userSlice">userSlice</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Apr 22 2025 15:57:29 GMT+0200 (heure d’été d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

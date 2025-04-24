@@ -1,0 +1,97 @@
+@use "../../styles/utils/mixins" as *;
+
+.container__profile {
+  background-color: #12002b;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 190px;
+    color: #fff;
+    margin-bottom: 2rem;
+    padding: 20px;
+
+    h1,
+    .user-name {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .edit-button {
+      border-color: #00bc77;
+      background-color: #00bc77;
+      color: #fff;
+      font-weight: bold;
+      margin-top: 1.5rem;
+      padding: 10px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #fff;
+        color: #00bc77;
+      }
+    }
+
+    .edit-form {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 20px;
+
+      &__inputs {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+
+        @include responsive-tablet {
+          flex-direction: row;
+          gap: 20px;
+        }
+
+        input {
+          padding: 10px;
+          &:not(:focus) {
+            color: lightgray;
+          }
+          &:focus {
+            color: #fff;
+            background-color: #00bc77;
+            border: 1px solid #00bc77;
+            outline: none;
+          }
+          &::selection {
+            background-color: green;
+            color: white;
+          }
+        }
+      }
+
+      &__controls {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+
+        &__button {
+          width: 120px;
+          font-weight: 700;
+          border-color: #00bc77;
+          background-color: white;
+          color: #00bc77;
+          padding: 5px 0;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #00bc77;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}

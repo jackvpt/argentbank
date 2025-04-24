@@ -1,0 +1,100 @@
+/* Responsive */
+/* Responsive */
+.container__signin {
+  display: flex;
+  flex-direction: column;
+  background-color: #12002b;
+  padding: 3rem;
+}
+.container__signin__content {
+  background-color: white;
+  width: 300px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.container__signin__content .input-remember {
+  display: flex;
+}
+.container__signin__content .input-remember label {
+  margin-left: 0.25rem;
+}
+.container__signin__content .input-wrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin: 1rem 0 0.5rem;
+}
+.container__signin__content .input-wrapper label {
+  font-weight: bold;
+}
+.container__signin__content .input-wrapper__required {
+  margin-left: 5px;
+  color: red;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+.container__signin__content .input-wrapper__required-text {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+}
+.container__signin__content .input-wrapper input {
+  padding: 5px;
+  font-size: 1.2rem;
+}
+.container__signin__content .input-wrapper .input-error {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 5px;
+}
+.container__signin__content .sign-in-button {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-decoration: underline;
+  margin-top: 1rem;
+  border-color: #00bc77;
+  background-color: #00bc77;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+}
+.container__signin__content .sign-in-button:hover {
+  background-color: #00a65a;
+}
+.container__signin__content .sign-in-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+.container__signin__content .signin-error {
+  margin-top: 1rem;
+  color: #ff4d4d;
+  background-color: #ffeaea;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid #ff0000;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  max-width: 400px;
+  animation: shake-rotation 0.5s ease-in-out;
+}
+@keyframes shake-rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-1deg);
+  }
+  50% {
+    transform: rotate(1deg);
+  }
+  75% {
+    transform: rotate(-1deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}/*# sourceMappingURL=SignIn.css.map */
